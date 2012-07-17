@@ -3,6 +3,18 @@ Introduction
 
 Inlinetrans is a django application that allows the translation of django templates from the rendered html in the browser. Once you have your templates internationalized with inlinetrans, you can click on the untranslated messages in their corresponding web pages to add their translations. This can be of great help for translators, as they will be able to translate the messages right in their intended context.
 
+- Originally developed by Yaco systems, see http://www.yaco.es/blog/en/django/2012/01/inline-editing-and-translating-in-django/
+- Original project page: http://code.google.com/p/django-inlinetrans/
+- Converted to GitHub by Rick van Hattem, https://github.com/WoLpH
+
+Current developement goals at https://github.com/protecomp/django-inlinetrans:
+
+- Improve code quality and documentation
+- Allow easier installation and configuration
+- Use new features in more recent Django versions
+
+Backwards compatibility can not be guaranteed, so if you have used previous versions on django-inlinetrans, see what needs to be changed.
+
 Features
 ========
 
