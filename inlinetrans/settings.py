@@ -1,40 +1,24 @@
+from django.conf import settings
 """
+If you want to change the reloading method, define 
+INLINETRANS_RELOAD_METHOD in your settings. Default: runserver
 
-You have to define an AUTO_RELOAD_METHOD in your settings or
-DEFAULT_AUTO_RELOAD_METHOD will be used.
-
-Options for this settings::
-  * "test" for a django instance (this do a touch over settings.py for reload)
-  * "apache2"
-  * "httpd"
-  * "wsgi"
-  * "restart_script <script_path_name>"
+Options for this setting::
+  * "runserver" 	Django runserver (this does a touch over settings.py)
+  * "mod_wsgi"		Apache mod_wsgi, reloads the code with touch wsgi.py
+  * "command"		Run RELOAD_COMMAND
 
 """
-DEFAULT_AUTO_RELOAD_METHOD = 'test'
-DEFAULT_AUTO_RELOAD_TIME = '5'
-DEFAULT_AUTO_RELOAD_LOG = 'var/log/autoreload_last.log'
-
-
-def get_auto_reload_method():
-    from django.conf import settings
-    if hasattr(settings, 'AUTO_RELOAD_METHOD'):
-        return settings.AUTO_RELOAD_METHOD
-    else:
-        return DEFAULT_AUTO_RELOAD_METHOD
-
-
-def get_auto_reload_time():
-    from django.conf import settings
-    if hasattr(settings, 'AUTO_RELOAD_TIME'):
-        return settings.AUTO_RELOAD_TIME
-    else:
-        return DEFAULT_AUTO_RELOAD_TIME
-
-
-def get_auto_reload_log():
-    from django.conf import settings
-    if hasattr(settings, 'AUTO_RELOAD_LOG'):
-        return settings.AUTO_RELOAD_LOG
-    else:
-        return DEFAULT_AUTO_RELOAD_LOG
+RELOAD_METHOD = getattr(settings, 'INLINETRANS_RELOAD_METHOD', 'runserver')
+"""
+Define a custom INLINETRANS_RELOAD_COMMAND if automatic reload does not work.
+The default reload method ("auto") always falls back to RELOAD_COMMAND, 
+if it is specified.
+"""
+RELOAD_COMMAND = getattr(settings, 'INLINETRANS_RELOAD_COMMAND', None)
+"""
+Increase INLINETRANS_RELOAD_TIME if your program reloads very slowly
+"""
+RELOAD_TIME = getattr(settings, 'INLINETRANS_RELOAD_TIME', '5')
+RELOAD_LOG = getattr(settings, 'INLINETRANS_RELOAD_LOG', 
+	'/tmp/autoreload_last.log')

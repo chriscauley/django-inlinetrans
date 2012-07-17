@@ -2,6 +2,7 @@ import os
 import datetime
 
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -13,7 +14,7 @@ import inlinetrans
 from inlinetrans.management.commands.inline_makemessages import make_messages
 from inlinetrans.polib import pofile
 from inlinetrans.utils import validate_format, find_pos
-from inlinetrans.settings import get_auto_reload_time
+from inlinetrans import settings as app_settings
 
 def find_po(lang, msgid, include_djangos=False):
     pos = find_pos(lang, include_djangos=include_djangos)
@@ -99,48 +100,54 @@ def set_new_translation(request):
     return HttpResponse(simplejson.dumps(result), mimetype='text/plain')
 
 
+@staff_member_required
 def do_restart(request):
     """
-    * "test" for a django instance (this do a touch over settings.py for reload)
-    * "apache"
-    * "httpd"
-    * "wsgi"
-    * "restart_script <script_path_name>"
+    Does a reload using one of following methods
+    * "runserver"
+    * "mod_wsgi"
+    * "gunicorn"
+    * "command"
     """
-    if request.user.is_staff:
+    reload_method = app_settings.RELOAD_METHOD
+    reload_log = app_settings.RELOAD_LOG
+    reload_time = app_settings.RELOAD_TIME
+    
+    if reload_method == 'runserver':
+        settings_module = request.environ.get('DJANGO_SETTINGS_MODULE')
+        filename = __import__(settings_module, {}, {}, [], 0).__file__
+        if filename.endswith('.pyc'):
+            filename = filename.replace('.pyc', '.py')
+        os.utime(filename, None)
+
+    # TODO: Test mod_wsgi
+    elif reload_method == 'mod_wsgi':
         if int(request.environ.get('mod_wsgi.script_reloading', '0')) and \
                 request.environ.has_key('mod_wsgi.process_group') and \
                 request.environ.get('mod_wsgi.process_group',None) and \
                 request.environ.has_key('SCRIPT_FILENAME'):
             try:
                 os.utime(request.environ.get('SCRIPT_FILENAME'), None)
-            except OSError:
-                pass
+            except:
+                return HttpResponse("The call to os.utime failed", status=500)
+        else:
+            return HttpResponse("mod_wsgi reload mode is used, but mod_wsgi \
+                is not configured correctly", status=500)
 
-        #reload_method = get_auto_reload_method()
-        #reload_log = get_auto_reload_log()
-        reload_time = get_auto_reload_time()
-        #command = "echo no script"
-        #if reload_method == 'test':
-        #    command = 'touch settings.py'
-        ### No RedHAT or similars
-        #elif reload_method == 'apache2':
-        #    command = 'sudo apache2ctl restart'
-        ### RedHAT, CentOS
-        #elif reload_method == 'httpd':
-        #    command = 'sudo service httpd restart'
+    # TODO: test gunicorn
+    elif reload_method == 'gunicorn':
+        try:
+            os.kill(os.getppid(), 1)
+        except Exception as e:
+            return HttpResponse("Gunicorn reload failed with: %s" % e, status=500)
 
-        #elif reload_method.startswith('restart_script'):
-        #    command = ' '.join(reload_method.split(" ")[1:])
-        #if os.path.exists(os.path.dirname(reload_log)):
-        #    os.system("sleep 2 && %s &> %s & " % (command, reload_log))
-        #else:
-        #    print 'The AUTO_RELOAD_LOG directory do not exist'  # Just in case our stdout is logged somewhere
-        #    os.system("sleep 2 && %s & " % command)
+    elif reload_method == 'command' and app_settings.RELOAD_COMMAND:
+        if not (os.path.exists(os.path.dirname(reload_log))):
+            return HttpResponse("The INLINETRANS_RELOAD_LOG directory does not exist", status=500)
+        os.system("sleep 2 && %s &> %s & " % (app_settings.RELOAD_COMMAND, reload_log))
 
-        return render_to_response('inlinetrans/response.html',
-                                  {'message': reload_time},
-                                  context_instance=RequestContext(request))
+    else:
+        return HttpResponse("Invalid INLINETRANS_RELOAD_METHOD (%s) or \
+            INLINETRANS_RELOAD_COMMAND is not specified" % app_settings.RELOAD_METHOD)
 
-#    return HttpResponseRedirect(request.environ['HTTP_REFERER'])
-
+    return HttpResponse(str(reload_time))
