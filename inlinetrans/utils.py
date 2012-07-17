@@ -42,59 +42,40 @@ def validate_format(pofile):
 def get_ordered_path_list(include_djangos):
     paths = []
 
+    # First, get locale paths from settings
+    for localepath in settings.LOCALE_PATHS:
+        if os.path.isdir(localepath):
+            paths.append(localepath)
+
+    # Supposedly Django versions before 1.3 reads app directories in reversed order,
+    # so if using old Django, use reversed when adding dirs
     if django_version[0] < 1 or (django_version[0] == 1 and django_version[1] < 3):  # Before django 1.3
-        # project/app/locale
-        for appname in reversed(settings.INSTALLED_APPS):
-            appname = str(appname)  # to avoid a fail in __import__ sentence
-            p = appname.rfind('.')
-            if p >= 0:
-                app = getattr(__import__(appname[:p], {}, {}, [appname[p + 1:]]), appname[p + 1:])
-            else:
-                app = __import__(appname, {}, {}, [])
-
-            apppath = os.path.join(os.path.dirname(app.__file__), 'locale')
-
-            if os.path.isdir(apppath):
-                paths.append(apppath)
-
-        # settings
-        for localepath in reversed(settings.LOCALE_PATHS):
-            if os.path.isdir(localepath):
-                paths.append(localepath)
-
-        # project/locale
-        parts = settings.SETTINGS_MODULE.split('.')
-        project = __import__(parts[0], {}, {}, [])
-        paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
-
+        installed_apps = reversed(settings.INSTALLED_APPS)
     else:  # Django 1.3
-        # project/app/locale
-        for appname in settings.INSTALLED_APPS:
-            appname = str(appname)  # to avoid a fail in __import__ sentence
-            p = appname.rfind('.')
-            if p >= 0:
-                app = getattr(__import__(appname[:p], {}, {}, [appname[p + 1:]]), appname[p + 1:])
-            else:
-                app = __import__(appname, {}, {}, [])
+        installed_apps = settings.INSTALLED_APPS
+        
+    # project/app/locale
+    for appname in installed_apps:
+        appname = str(appname)  # to avoid a fail in __import__ sentence
+        p = appname.rfind('.')
+        if p >= 0:
+            app = getattr(__import__(appname[:p], {}, {}, [appname[p + 1:]]), appname[p + 1:])
+        else:
+            app = __import__(appname, {}, {}, [])
 
-            apppath = os.path.join(os.path.dirname(app.__file__), 'locale')
+        apppath = os.path.join(os.path.dirname(app.__file__), 'locale')
 
-            if os.path.isdir(apppath):
-                paths.append(apppath)
+        if os.path.isdir(apppath):
+            paths.append(apppath)
 
-        # settings
-        for localepath in settings.LOCALE_PATHS:
-            if os.path.isdir(localepath):
-                paths.append(localepath)
-
-        # project/locale
-        parts = settings.SETTINGS_MODULE.split('.')
-        project = __import__(parts[0], {}, {}, [])
-        projectpath = os.path.join(os.path.dirname(project.__file__), 'locale')
-        localepaths = [os.path.normpath(path) for path in settings.LOCALE_PATHS]
-        if (projectpath and os.path.isdir(projectpath) and
-            os.path.normpath(projectpath) not in localepaths):
-            paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
+    # project/locale
+    parts = settings.SETTINGS_MODULE.split('.')
+    project = __import__(parts[0], {}, {}, [])
+    projectpath = os.path.join(os.path.dirname(project.__file__), 'locale')
+    localepaths = [os.path.normpath(path) for path in settings.LOCALE_PATHS]
+    if (projectpath and os.path.isdir(projectpath) and
+        os.path.normpath(projectpath) not in localepaths):
+        paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
 
     # django/locale
     if include_djangos:
