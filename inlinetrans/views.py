@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.utils import simplejson
 from django.utils.encoding import smart_str
 from django.utils.translation import get_language, ugettext as _
+from django.views.decorators.http import require_POST
 import inlinetrans
 
 from inlinetrans.management.commands.inline_makemessages import make_messages
@@ -100,6 +101,7 @@ def set_new_translation(request):
     return HttpResponse(simplejson.dumps(result), mimetype='text/plain')
 
 
+@require_POST
 @staff_member_required
 def do_restart(request):
     """
