@@ -99,7 +99,7 @@ register.tag('itrans', inline_trans)
 def inlinetrans_media(context):
     tag_context = {
         'is_staff': False,
-        'INLINETRANS_MEDIA_URL': app_settings.MEDIA_URL,
+        'INLINETRANS_STATIC_URL': app_settings.STATIC_URL,
         'request': context['request'],
     }
     if 'user' in context and context['user'].is_staff:
@@ -113,7 +113,7 @@ def inlinetrans_media(context):
 @register.inclusion_tag('inlinetrans/inline_toolbar.html', takes_context=True)
 def inlinetrans_toolbar(context, node_id):
     tag_context = {
-        'INLINETRANS_MEDIA_URL': app_settings.MEDIA_URL,
+        'INLINETRANS_STATIC_URL': app_settings.STATIC_URL,
         'request': context['request'],
     }
     if 'user' in context and context['user'].is_staff:

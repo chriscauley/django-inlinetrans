@@ -24,11 +24,11 @@ RELOAD_LOG = getattr(settings, 'INLINETRANS_RELOAD_LOG',
 	'/tmp/autoreload_last.log')
 
 """
-On Django < 1.3, set INLINETRANS_MEDIA_URL to point to the directory with inlinetrans media files.
+On Django < 1.3, set INLINETRANS_STATIC_URL to point to the directory with inlinetrans media files.
 The default value works only when using Django 1.3 staticfiles-app.
 
-Example:
+Example, for Django < 1.3:
 - copy django-inlinetrans/inlinetrans/static/inlinetrans to your MEDIA_ROOT
-- set INLINETRANS_MEDIA_URL = MEDIA_URL + 'inlinetrans/'
+- set INLINETRANS_STATIC_URL = MEDIA_URL + 'inlinetrans/'
 """
-MEDIA_URL = getattr(settings, 'INLINETRANS_MEDIA_URL', settings.STATIC_URL + 'inlinetrans/')
+STATIC_URL = getattr(settings, 'INLINETRANS_STATIC_URL', settings.STATIC_URL + 'inlinetrans/')
