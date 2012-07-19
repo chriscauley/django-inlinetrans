@@ -18,6 +18,7 @@
                     data: jsondata,
                     url: new_translation_url,
                     type: "POST",
+                    headers: {"X-CSRFToken": $.cookie('csrftoken')},
                     async: true,
                     dataType: "json",
                     success: function(response){
@@ -133,6 +134,7 @@
                                 data: {restart: 1},
                                 url: restart_url,
                                 type: "POST",
+                                headers: {"X-CSRFToken": $.cookie('csrftoken')},
                                 async: true,
                                 success: function(response){
                                     some_changes = false;
