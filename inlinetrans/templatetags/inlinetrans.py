@@ -12,12 +12,10 @@ except ImportError: # Django 1.1 fallback
 from django.utils.translation import get_language
 from django.utils.translation.trans_real import catalog
 
+# Using relative import to get inlinetrans.settings module
+from .. import settings as app_settings
 
 register = template.Library()
-
-
-def get_media_url():
-    return getattr(settings, 'INLINETRANS_MEDIA_URL', settings.MEDIA_URL + 'inlinetrans/')
 
 
 def get_language_name(lang):
@@ -101,7 +99,7 @@ register.tag('itrans', inline_trans)
 def inlinetrans_media(context):
     tag_context = {
         'is_staff': False,
-        'INLINETRANS_MEDIA_URL': get_media_url(),
+        'INLINETRANS_MEDIA_URL': app_settings.MEDIA_URL,
         'request': context['request'],
     }
     if 'user' in context and context['user'].is_staff:
@@ -115,7 +113,7 @@ def inlinetrans_media(context):
 @register.inclusion_tag('inlinetrans/inline_toolbar.html', takes_context=True)
 def inlinetrans_toolbar(context, node_id):
     tag_context = {
-        'INLINETRANS_MEDIA_URL': get_media_url(),
+        'INLINETRANS_MEDIA_URL': app_settings.MEDIA_URL,
         'request': context['request'],
     }
     if 'user' in context and context['user'].is_staff:
@@ -127,7 +125,6 @@ def inlinetrans_toolbar(context, node_id):
     else:
         tag_context.update({
             'is_staff': False,
-            'INLINETRANS_MEDIA_URL': get_media_url(),
             'request': context['request'],
         })
     return tag_context

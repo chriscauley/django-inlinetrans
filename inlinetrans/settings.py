@@ -22,3 +22,13 @@ Increase INLINETRANS_RELOAD_TIME if your program reloads very slowly
 RELOAD_TIME = getattr(settings, 'INLINETRANS_RELOAD_TIME', '5')
 RELOAD_LOG = getattr(settings, 'INLINETRANS_RELOAD_LOG', 
 	'/tmp/autoreload_last.log')
+
+"""
+On Django < 1.3, set INLINETRANS_MEDIA_URL to point to the directory with inlinetrans media files.
+The default value works only when using Django 1.3 staticfiles-app.
+
+Example:
+- copy django-inlinetrans/inlinetrans/static/inlinetrans to your MEDIA_ROOT
+- set INLINETRANS_MEDIA_URL = MEDIA_URL + 'inlinetrans/'
+"""
+MEDIA_URL = getattr(settings, 'INLINETRANS_MEDIA_URL', settings.STATIC_URL + 'inlinetrans/')
