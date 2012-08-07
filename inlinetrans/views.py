@@ -147,7 +147,7 @@ def do_restart(request):
     elif reload_method == 'command' and app_settings.RELOAD_COMMAND:
         if not (os.path.exists(os.path.dirname(reload_log))):
             return HttpResponse("The INLINETRANS_RELOAD_LOG directory does not exist", status=500)
-        os.system("sleep 2 && %s &> %s & " % (app_settings.RELOAD_COMMAND, reload_log))
+        os.system("sleep 1 && %s &> %s & " % (app_settings.RELOAD_COMMAND, reload_log))
 
     else:
         return HttpResponse("Invalid INLINETRANS_RELOAD_METHOD (%s) or \

@@ -19,7 +19,7 @@ RELOAD_COMMAND = getattr(settings, 'INLINETRANS_RELOAD_COMMAND', None)
 """
 Increase INLINETRANS_RELOAD_TIME if your program reloads very slowly
 """
-RELOAD_TIME = getattr(settings, 'INLINETRANS_RELOAD_TIME', '5')
+RELOAD_TIME = getattr(settings, 'INLINETRANS_RELOAD_TIME', '2')
 RELOAD_LOG = getattr(settings, 'INLINETRANS_RELOAD_LOG', 
 	'/tmp/autoreload_last.log')
 
