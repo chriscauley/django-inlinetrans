@@ -21,7 +21,13 @@ class Command(makemessages.Command):
         from django.utils.translation import trans_real
         import re
 
+        old_inline_re = trans_real.inline_re
+        old_block_re = trans_real.block_re
+
         trans_real.inline_re = re.compile(r"""^\s*(?:trans|itrans|inline_trans)\s+((?:".*?")|(?:'.*?'))\s*""")
         trans_real.block_re = re.compile(r"""^\s*(?:blocktrans|iblocktrans)(?:\s+|$)""")
 
         super(Command, self).handle(*args, **options)
+
+        trans_real.inline_re = old_inline_re
+        trans_real.block_re = old_block_re

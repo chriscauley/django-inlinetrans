@@ -4,6 +4,7 @@ import datetime
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
+from django.core.management import call_command
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils import simplejson
@@ -12,7 +13,6 @@ from django.utils.translation import get_language, ugettext as _
 from django.views.decorators.http import require_POST
 import inlinetrans
 
-from inlinetrans.management.commands.inline_makemessages import make_messages
 from inlinetrans.polib import pofile
 from inlinetrans.utils import validate_format, find_pos
 from inlinetrans import settings as app_settings
@@ -62,7 +62,8 @@ def set_new_translation(request):
         if retry != 'false':
             root_path = os.path.dirname(os.path.normpath(os.sys.modules[settings.SETTINGS_MODULE].__file__))
             locale_path = os.path.dirname(os.path.normpath(os.sys.modules[settings.SETTINGS_MODULE].__file__))
-            make_messages(lang, extensions=['.html'], root_path=root_path, locale_path=locale_path)
+            call_command('inline_makemessages', locale=lang, extensions=['.html'], root_path=root_path, locale_path=locale_path)
+#            make_messages(lang, extensions=['.html'], root_path=root_path, locale_path=locale_path)
 
         file_po, selected_pofile, poentry = find_po(lang, msgid,
             include_djangos=True)
