@@ -1,0 +1,93 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-07 17:03+0300\n"
+"PO-Revision-Date: 2012-08-07 17:07\n"
+"Last-Translator: Mikko V <vilpponen@protecomp.fi>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Translated-Using: django-rosetta 0.6.8\n"
+
+#: views.py:44
+msgid "You have no permission to update translation catalogs"
+msgstr "Sinulla ei ole käyttöoikeuksia käännöstiedostojen muokkaamiseen"
+
+#: views.py:48
+msgid "Invalid request method"
+msgstr ""
+
+#: views.py:53
+msgid "Unknow error"
+msgstr ""
+
+#: views.py:79
+#, python-format
+msgid "\"%(msgid)s\" not found in any catalog"
+msgstr "Merkkijonoa \"%(msgid)s\" ei löytynyt käännöstiedostosta"
+
+#: views.py:81
+msgid ""
+"Do you want to update the catalog (this could take longer) and try again?"
+msgstr ""
+"Haluatko päivittää käännöstiedostot ja yrittää uudelleen (tämä voi kestää "
+"jonkin aikaa)?"
+
+#: views.py:99
+msgid "Catalog updated successfully"
+msgstr "Käännöstiedostot päivitetty"
+
+#: views.py:101
+msgid "PO entry not found"
+msgstr ""
+
+#: templates/inlinetrans/inline_toolbar.html:7
+msgid "Give a new translation for "
+msgstr "Anna uusi käännös:"
+
+#: templates/inlinetrans/inline_toolbar.html:7
+msgid "to"
+msgstr "kielelle"
+
+#: templates/inlinetrans/inline_toolbar.html:8
+msgid "You are sending an empty translation ¿Are you sure? "
+msgstr "Haluatko varmasti tallentaa tyhjän käännöksen?"
+
+#: templates/inlinetrans/inline_toolbar.html:9
+msgid "Reloading"
+msgstr "Päivitetään"
+
+#: templates/inlinetrans/inline_toolbar.html:10
+#: templates/inlinetrans/inline_toolbar.html:25
+msgid "Apply changes"
+msgstr "Ota muutokset käyttöön"
+
+#: templates/inlinetrans/inline_toolbar.html:11
+msgid "Applying changes"
+msgstr "Päivitetään"
+
+#: templates/inlinetrans/inline_toolbar.html:12
+msgid "Cannot send translation"
+msgstr "Käännöksen lähettäminen epäonnistui"
+
+#: templates/inlinetrans/inline_toolbar.html:13
+msgid "Cannot restart server"
+msgstr "Sovelluksen uudelleenkäynnistys epäonnistui"
+
+#: templates/inlinetrans/inline_toolbar.html:23
+msgid "See translatable items"
+msgstr "Näytä käännettävät merkkijonot"
+
+#: templates/inlinetrans/inline_toolbar.html:24
+msgid "See non translated items"
+msgstr "Näytä kääntämättömät merkkijonot"
