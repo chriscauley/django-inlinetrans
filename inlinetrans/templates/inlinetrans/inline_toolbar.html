@@ -18,12 +18,12 @@
 
     var toolbar_tpl = '\
         <div class="inlinetransContainer">\
-            <img id="changes-loading" src="{{ INLINETRANS_STATIC_URL }}img/ajax-loader-transparent.gif"/>\
             <span class="inlinetransActions">\
                 <span class="inlinetransAction hightlightTrans">{% trans "See translatable items" %}</span>\
                 <span class="inlinetransAction hightlightNotrans">{% trans "See non translated items" %}</span>\
                 <span class="inlinetransAction restartServer">{% trans "Apply changes" %}</span>\
             </span>\
+            <img id="changes-loading" src="{{ INLINETRANS_STATIC_URL }}img/ajax-loader-transparent.gif"/>\
         </div>';
     // init inlinetrans toolbar
     $('#{{ node_id }}').inlinetranstoolbar(toolbar_tpl, new_translation_url, restart_url, messages_dict);
