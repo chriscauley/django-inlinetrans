@@ -4,12 +4,12 @@
 
 .inlinetrans-container {
     background-color: #ededed;
-    border: #ddd solid 1px;
+    color: #444;
     font-family: sans-serif;
     font-size: 11px;
     height: 19px;
-    top: 0px;
     right: 0px;
+    top: 0px;
 }
 
 .inlinetrans-caption {

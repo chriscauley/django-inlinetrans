@@ -14,14 +14,19 @@ except ImportError: # Django 1.1 fallback
 from django.utils.translation import get_language
 from django.utils.translation.trans_real import catalog
 
-# Using relative import to get inlinetrans.settings module
+from .. import polib
 from .. import settings as app_settings
+from ..utils import find_pos
+
 
 register = template.Library()
 
 
 
 def get_language_name(lang):
+    """
+    Returns the language name from the main Django settings identified by the given language code.
+    """
     for lang_code, lang_name in settings.LANGUAGES:
         if lang == lang_code:
             return lang_name
@@ -48,12 +53,14 @@ class InlineTranslateNode(Node):
             self.filter_expression.var = Variable(u"'%s'" % self.filter_expression.var)
 
     def render(self, context):
+        # get the user
         if 'user' in context:
             user = context['user']
         elif 'request' in context:
             user = getattr(context.get('request'), 'user', None)
         else:
             user = None
+
         if not (user and user.is_staff):
             self.filter_expression.var.translate = not self.noop
             output = self.filter_expression.resolve(context)
@@ -79,32 +86,8 @@ class InlineTranslateNode(Node):
         return render_to_string('inlinetrans/inline_trans.html',{
             'msgid': msgid,
             'styles': ' '.join(styles),
-            'value': msgstr})
-
-
-
-def inline_trans(parser, token):
-    """
-    Template tag 'itrans' that replaces Django's 'trans' template tag.
-    """
-    class TranslateParser(TokenParser):
-        def top(self):
-            value = self.value()
-            if self.more():
-                if self.tag() == 'noop':
-                    noop = True
-                else:
-                    raise TemplateSyntaxError("only option for 'trans' is 'noop'")
-            else:
-                noop = False
-            return (value, noop)
-
-    value, noop = TranslateParser(token.contents).top()
-
-    return InlineTranslateNode(parser.compile_filter(value), noop)
-
-register.tag('inline_trans', inline_trans)
-register.tag('itrans', inline_trans)
+            'value': msgstr
+        })
 
 
 
@@ -135,8 +118,9 @@ def inlinetrans_media(context):
 @register.inclusion_tag('inlinetrans/inline_toolbar.html', takes_context=True)
 def inlinetrans_toolbar(context, node_id):
     """
-    Template tag that renders the inlinetrans toolbar.
+    Template tag that renders the translation toolbar.
     """
+
     tag_context = {
         'is_translator': False,
         'INLINETRANS_STATIC_URL': app_settings.STATIC_URL,
@@ -146,10 +130,22 @@ def inlinetrans_toolbar(context, node_id):
     # if the user is a translator
     if 'user' in context and\
        context['user'].groups.filter(name=app_settings.TRANSLATORS_GROUP).count() > 0:
+
+        # get current language
+        lang = get_language_name(get_language())
+
+        # get percentage done
+        pos = find_pos(get_language())
+        po = polib.pofile(pos[0])
+
+        percent_translated = po.percent_translated()
+
+        # compile context
         tag_context.update({
             'is_translator': True,
-            'language': get_language_name(get_language()),
+            'language': lang,
             'node_id': node_id,
+            'percent_translated': percent_translated,
         })
 
     else:
@@ -158,3 +154,27 @@ def inlinetrans_toolbar(context, node_id):
         })
     return tag_context
 
+
+
+def inline_trans(parser, token):
+    """
+    Template tag {% itrans %} that replaces Django's {% trans %} template tag.
+    """
+    class TranslateParser(TokenParser):
+        def top(self):
+            value = self.value()
+            if self.more():
+                if self.tag() == 'noop':
+                    noop = True
+                else:
+                    raise TemplateSyntaxError("only option for 'trans' is 'noop'")
+            else:
+                noop = False
+            return (value, noop)
+
+    value, noop = TranslateParser(token.contents).top()
+
+    return InlineTranslateNode(parser.compile_filter(value), noop)
+
+register.tag('inline_trans', inline_trans)
+register.tag('itrans', inline_trans)

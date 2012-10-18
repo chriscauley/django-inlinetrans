@@ -27,8 +27,10 @@ def find_po(lang, msgid, include_djangos=False):
         for file_po in pos:
             candidate = pofile(file_po)
             poentry = candidate.find(msgid)
+
             if poentry:
                 entries.append((file_po, candidate, poentry))
+
                 if candidate:
                     break
 
