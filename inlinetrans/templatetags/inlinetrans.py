@@ -1,3 +1,4 @@
+# coding=utf-8
 import copy
 
 from django import template
@@ -28,7 +29,6 @@ def get_language_name(lang):
 
 
 class NotTranslated(object):
-
     @staticmethod
     def ugettext(cadena):
         raise ValueError("not translated")
@@ -40,10 +40,10 @@ class NotTranslated(object):
 
 
 class InlineTranslateNode(Node):
-
     def __init__(self, filter_expression, noop):
         self.noop = noop
         self.filter_expression = filter_expression
+
         if isinstance(self.filter_expression.var, basestring):
             self.filter_expression.var = Variable(u"'%s'" % self.filter_expression.var)
 
@@ -57,6 +57,7 @@ class InlineTranslateNode(Node):
         if not (user and user.is_staff):
             self.filter_expression.var.translate = not self.noop
             output = self.filter_expression.resolve(context)
+
             return _render_value_in_context(output, context)
 
         if getattr(self.filter_expression.var, 'literal'):
@@ -70,6 +71,7 @@ class InlineTranslateNode(Node):
 
         try:
             msgstr = cat.ugettext(msgid)
+
         except ValueError:
             styles.append("untranslated")
             msgstr = msgid
@@ -82,9 +84,10 @@ class InlineTranslateNode(Node):
 
 
 def inline_trans(parser, token):
-
+    """
+    Template tag 'itrans' that replaces Django's 'trans' template tag.
+    """
     class TranslateParser(TokenParser):
-
         def top(self):
             value = self.value()
             if self.more():
@@ -95,6 +98,7 @@ def inline_trans(parser, token):
             else:
                 noop = False
             return (value, noop)
+
     value, noop = TranslateParser(token.contents).top()
 
     return InlineTranslateNode(parser.compile_filter(value), noop)
@@ -106,20 +110,31 @@ register.tag('itrans', inline_trans)
 
 @register.inclusion_tag('inlinetrans/inline_header.html', takes_context=True)
 def inlinetrans_media(context):
+    """
+    Template tag that renders the html tags to include the necessary stylesheets
+    and javascript files
+    """
     tag_context = {
         'is_staff': False,
         'INLINETRANS_STATIC_URL': app_settings.STATIC_URL,
         'request': context['request'],
     }
+
     if 'user' in context and context['user'].is_staff:
         tag_context.update({
             'is_staff': True,
             'language': get_language_name(get_language()),
         })
+
     return tag_context
+
+
 
 @register.inclusion_tag('inlinetrans/inline_toolbar.html', takes_context=True)
 def inlinetrans_toolbar(context, node_id):
+    """
+    Template tag that renders the inlinetrans toolbar.
+    """
     tag_context = {
         'INLINETRANS_STATIC_URL': app_settings.STATIC_URL,
         'request': context['request'],

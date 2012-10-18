@@ -1,5 +1,4 @@
-# Extends Django's makemessages command and modifies its behaviour
-# by overriding two regular expressions in django.utils.translation
+# coding=utf-8
 
 import re
 
@@ -7,12 +6,16 @@ from django.core.management.base import CommandError, BaseCommand, NoArgsCommand
 from django.core.management.commands import makemessages
 
 class Command(makemessages.Command):
-    help = ( "makemessages command modified for django-inlinetrans. "
-"Runs over the entire source tree of the current directory and "
-"pulls out all strings marked for translation. It creates (or updates) a message "
-"file in the conf/locale (in the django tree) or locale (for projects and "
-"applications) directory.\n\nYou must run this command with one of either the "
-"--locale or --all options.")
+    """
+    Extends Django's makemessages command and modifies its behaviour
+    by overriding two regular expressions in django.utils.translation
+    """
+    help = ("makemessages command modified for django-inlinetrans. "
+            "Runs over the entire source tree of the current directory and "
+            "pulls out all strings marked for translation. It creates (or updates) a message "
+            "file in the conf/locale (in the django tree) or locale (for projects and "
+            "applications) directory.\n\nYou must run this command with one of either the "
+            "--locale or --all options.")
 
     def handle(self, *args, **options):
         if len(args) != 0:

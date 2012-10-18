@@ -1,4 +1,6 @@
+# coding=utf-8
 from django.conf import settings
+
 """
 If you want to change the reloading method, define 
 INLINETRANS_RELOAD_METHOD in your settings. Default: runserver
@@ -10,18 +12,23 @@ Options for this setting::
 
 """
 RELOAD_METHOD = getattr(settings, 'INLINETRANS_RELOAD_METHOD', 'runserver')
+
+
 """
 Define a custom INLINETRANS_RELOAD_COMMAND if automatic reload does not work.
 The default reload method ("auto") always falls back to RELOAD_COMMAND, 
 if it is specified.
 """
 RELOAD_COMMAND = getattr(settings, 'INLINETRANS_RELOAD_COMMAND', None)
+
+
 """
 Increase INLINETRANS_RELOAD_TIME if your program reloads very slowly
 """
 RELOAD_TIME = getattr(settings, 'INLINETRANS_RELOAD_TIME', '2')
 RELOAD_LOG = getattr(settings, 'INLINETRANS_RELOAD_LOG', 
 	'/tmp/autoreload_last.log')
+
 
 """
 On Django < 1.3, set INLINETRANS_STATIC_URL to point to the directory with inlinetrans media files.
