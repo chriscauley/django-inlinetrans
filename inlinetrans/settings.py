@@ -1,5 +1,23 @@
 # coding=utf-8
+
 from django.conf import settings
+
+"""
+The django auth group the use must be in to see the translator toolbar.
+"""
+TRANSLATORS_GROUP = getattr(settings, 'INLINETRANS_TRANSLATORS_GROUP', 'Translators')
+
+
+"""
+On Django < 1.3, set INLINETRANS_STATIC_URL to point to the directory with inlinetrans media files.
+The default value works only when using Django 1.3 staticfiles-app.
+
+Example, for Django < 1.3:
+- copy django-inlinetrans/inlinetrans/static/inlinetrans to your MEDIA_ROOT
+- set INLINETRANS_STATIC_URL = MEDIA_URL + 'inlinetrans/'
+"""
+STATIC_URL = getattr(settings, 'INLINETRANS_STATIC_URL', settings.STATIC_URL + 'inlinetrans/')
+
 
 """
 If you want to change the reloading method, define 
@@ -29,13 +47,3 @@ RELOAD_TIME = getattr(settings, 'INLINETRANS_RELOAD_TIME', '2')
 RELOAD_LOG = getattr(settings, 'INLINETRANS_RELOAD_LOG', 
 	'/tmp/autoreload_last.log')
 
-
-"""
-On Django < 1.3, set INLINETRANS_STATIC_URL to point to the directory with inlinetrans media files.
-The default value works only when using Django 1.3 staticfiles-app.
-
-Example, for Django < 1.3:
-- copy django-inlinetrans/inlinetrans/static/inlinetrans to your MEDIA_ROOT
-- set INLINETRANS_STATIC_URL = MEDIA_URL + 'inlinetrans/'
-"""
-STATIC_URL = getattr(settings, 'INLINETRANS_STATIC_URL', settings.STATIC_URL + 'inlinetrans/')

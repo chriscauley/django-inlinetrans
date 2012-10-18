@@ -115,14 +115,16 @@ def inlinetrans_media(context):
     and javascript files
     """
     tag_context = {
-        'is_staff': False,
+        'is_translator': False,
         'INLINETRANS_STATIC_URL': app_settings.STATIC_URL,
         'request': context['request'],
     }
 
-    if 'user' in context and context['user'].is_staff:
+    # if the user is a translator
+    if 'user' in context and \
+       context['user'].groups.filter(name=app_settings.TRANSLATORS_GROUP).count() > 0:
         tag_context.update({
-            'is_staff': True,
+            'is_translator': True,
             'language': get_language_name(get_language()),
         })
 
@@ -136,20 +138,22 @@ def inlinetrans_toolbar(context, node_id):
     Template tag that renders the inlinetrans toolbar.
     """
     tag_context = {
+        'is_translator': False,
         'INLINETRANS_STATIC_URL': app_settings.STATIC_URL,
         'request': context['request'],
     }
 
-    if 'user' in context and context['user'].is_staff:
+    # if the user is a translator
+    if 'user' in context and\
+       context['user'].groups.filter(name=app_settings.TRANSLATORS_GROUP).count() > 0:
         tag_context.update({
-            'is_staff': True,
+            'is_translator': True,
             'language': get_language_name(get_language()),
             'node_id': node_id,
         })
 
     else:
         tag_context.update({
-            'is_staff': False,
             'request': context['request'],
         })
     return tag_context

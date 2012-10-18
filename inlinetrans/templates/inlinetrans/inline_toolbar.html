@@ -1,5 +1,5 @@
 {% load i18n inlinetrans %}
-
+{% if is_translator %}
 <script language="javascript">
 (function ($) {
   $(document).ready(function () {
@@ -32,3 +32,4 @@
   });
 })(jQuery);
 </script>
+{% endif %}
