@@ -17,13 +17,15 @@
     var restart_url = "{% url inlinetrans.views.do_restart %}";
 
     var toolbar_tpl = '\
-        <div class="inlinetransContainer">\
-            <span class="inlinetransActions">\
-                <span class="inlinetransAction hightlightTrans">{% trans "See translatable items" %}</span>\
-                <span class="inlinetransAction hightlightNotrans">{% trans "See non translated items" %}</span>\
-                <span class="inlinetransAction restartServer">{% trans "Apply changes" %}</span>\
+        <div class="inlinetrans-container">\
+            <span class="inlinetrans-caption">{% trans "Translator" %}</span> \
+            <span class="inlinetrans-translation">{% trans "Your are translating: ENGLISH" %} ➔ DEUTSCH</span> \
+            <span class="inlinetrans-actions">\
+                <span class="inlinetrans-action highlight-trans">{% trans "See translatable items" %}</span>\
+                <span class="inlinetrans-action highlight-notrans">{% trans "See non translated items" %}</span>\
+                <span class="inlinetrans-action restart-server">{% trans "Apply changes" %}</span>\
             </span>\
-            <img id="changes-loading" src="{{ INLINETRANS_STATIC_URL }}img/ajax-loader-transparent.gif"/>\
+            <img class="inlinetrans-busy" src="{{ INLINETRANS_STATIC_URL }}img/ajax-loader-transparent.gif"/>\
         </div>';
     // init inlinetrans toolbar
     $('#{{ node_id }}').inlinetranstoolbar(toolbar_tpl, new_translation_url, restart_url, messages_dict);

@@ -84,12 +84,12 @@ Also, you can customize the toolbar and other parameters using inlinetrans as fo
         var restart_url = "{% url inlinetrans.views.do_restart %}";
 
         var toolbar_tpl = '\
-            <div class="inlinetransContainer">\
-                <img id="changes-loading" src="{{ INLINETRANS_MEDIA_URL }}img/ajax-loader-transparent.gif"/>\
-                <span class="inlinetransActions">\
-                    <span class="inlinetransAction hightlightTrans">See translatable items</span>\
-                    <span class="inlinetransAction hightlightNotrans">See non translated items</span>\
-                    <span class="inlinetransAction restartServer">Apply changes</span>\
+            <div class="inlinetrans-container">\
+                <img class="inlinetrans-busy" src="{{ INLINETRANS_MEDIA_URL }}img/ajax-loader-transparent.gif"/>\
+                <span class="inlinetrans-actions">\
+                    <span class="inlinetrans-action highlight-trans">See translatable items</span>\
+                    <span class="inlinetrans-action highlight-notrans">See non translated items</span>\
+                    <span class="inlinetrans-action restart-server">Apply changes</span>\
                 </span>\
             </div>';
         // init inlinetrans toolbar

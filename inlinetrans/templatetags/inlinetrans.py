@@ -4,6 +4,7 @@ from django import template
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.template import TemplateSyntaxError, TokenParser, Node, Variable
+
 try:
     from django.template.base import _render_value_in_context
 except ImportError: # Django 1.1 fallback
@@ -18,10 +19,12 @@ from .. import settings as app_settings
 register = template.Library()
 
 
+
 def get_language_name(lang):
     for lang_code, lang_name in settings.LANGUAGES:
         if lang == lang_code:
             return lang_name
+
 
 
 class NotTranslated(object):
@@ -33,6 +36,7 @@ class NotTranslated(object):
     @staticmethod
     def add_fallback(func):
         return
+
 
 
 class InlineTranslateNode(Node):
@@ -59,18 +63,22 @@ class InlineTranslateNode(Node):
             msgid = self.filter_expression.var.literal
         else:
             msgid = self.filter_expression.resolve(context)
+
         cat = copy.copy(catalog())
         cat.add_fallback(NotTranslated)
         styles = ['translatable']
+
         try:
             msgstr = cat.ugettext(msgid)
         except ValueError:
             styles.append("untranslated")
             msgstr = msgid
-        return render_to_string('inlinetrans/inline_trans.html',
-                                {'msgid': msgid,
-                                 'styles': ' '.join(styles),
-                                 'value': msgstr})
+
+        return render_to_string('inlinetrans/inline_trans.html',{
+            'msgid': msgid,
+            'styles': ' '.join(styles),
+            'value': msgstr})
+
 
 
 def inline_trans(parser, token):
@@ -95,6 +103,7 @@ register.tag('inline_trans', inline_trans)
 register.tag('itrans', inline_trans)
 
 
+
 @register.inclusion_tag('inlinetrans/inline_header.html', takes_context=True)
 def inlinetrans_media(context):
     tag_context = {
@@ -109,19 +118,20 @@ def inlinetrans_media(context):
         })
     return tag_context
 
-
 @register.inclusion_tag('inlinetrans/inline_toolbar.html', takes_context=True)
 def inlinetrans_toolbar(context, node_id):
     tag_context = {
         'INLINETRANS_STATIC_URL': app_settings.STATIC_URL,
         'request': context['request'],
     }
+
     if 'user' in context and context['user'].is_staff:
         tag_context.update({
             'is_staff': True,
             'language': get_language_name(get_language()),
             'node_id': node_id,
         })
+
     else:
         tag_context.update({
             'is_staff': False,

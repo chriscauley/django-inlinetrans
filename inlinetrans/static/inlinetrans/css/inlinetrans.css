@@ -1,41 +1,50 @@
-div.inlinetransContainer {
-    height: 16px;
-    border: #DDDDDD solid 1px;
-    top: 0px;
-    right: 0px;
-    background-color: #EDEDED;
+/*
+    Main Styles for django-inlinetrans tool bar.
+*/
+
+.inlinetrans-container {
+    background-color: #ededed;
+    border: #ddd solid 1px;
     font-family: sans-serif;
     font-size: 11px;
+    height: 19px;
+    top: 0px;
+    right: 0px;
 }
 
-span.showInlinetransBar {
+.inlinetrans-caption {
+    font-weight: bold;
+    margin: 0 2em;
+}
+
+.inlinetrans-translation {
+    margin-right: 2em;
+}
+
+.inlinetrans-action {
     cursor: pointer;
-    padding: 1px 3px 2px 3px;
+    padding: 0.5em;
 }
 
-span.inlinetransAction {
-    padding: 0 5px 0 5px;
-    cursor: pointer;
+.inlinetrans-action.active {
+    background-color: #afafaf;
+    color: #fdfdfd;
 }
 
-span.restartServer {
+.restart-server {
     display: none;
 }
 
-div.inlinetransContainer .active {
-    background-color: #BFBFBF;
+.inlinetrans-highlight {
+    background-color: #90ee90;
 }
 
-span.inlinetransHighlight {
-    background-color: #90EE90;
+.inlinetrans-untranslated {
+    background-color: #ffc0cb;
 }
 
-span.inlinetransUntranslated {
-    background-color: #FFC0CB;
-}
-
-img#changes-loading {
+.inlinetrans-busy {
     display: none;
-    width: 16px;
     height: 16px;
+    width: 16px;
 }
