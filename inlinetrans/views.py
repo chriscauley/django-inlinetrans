@@ -1,26 +1,28 @@
 # coding=utf-8
-import os
+
 import datetime
+import os
 
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
 from django.core.management import call_command
+from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils import simplejson
 from django.utils.encoding import smart_str
 from django.utils.translation import get_language, ugettext as _
 from django.views.decorators.http import require_POST
-import inlinetrans
 
+import inlinetrans
+from inlinetrans import settings as app_settings
 from inlinetrans.polib import pofile
 from inlinetrans.utils import validate_format, find_pos
-from inlinetrans import settings as app_settings
 
 def find_po(lang, msgid, include_djangos=False):
     pos = find_pos(lang, include_djangos=include_djangos)
     entries = [(None, None, None)]
+
     if pos:
         for file_po in pos:
             candidate = pofile(file_po)
@@ -31,6 +33,8 @@ def find_po(lang, msgid, include_djangos=False):
                     break
 
     return entries[-1]
+
+
 
 def set_new_translation(request):
     """
@@ -83,6 +87,7 @@ def set_new_translation(request):
             return HttpResponse(simplejson.dumps(result), mimetype='text/plain')
 
         format_errors = validate_format(selected_pofile)
+
         if format_errors:
             result['message'] = format_errors
             return HttpResponse(simplejson.dumps(result), mimetype='text/plain')
@@ -98,9 +103,12 @@ def set_new_translation(request):
             selected_pofile.save_as_mofile(po_filename.replace('.po', '.mo'))
             result['errors'] = False
             result['message'] = _('Catalog updated successfully')
+
         elif not poentry:
             result['message'] = _('PO entry not found')
+
     return HttpResponse(simplejson.dumps(result), mimetype='text/plain')
+
 
 
 @require_POST

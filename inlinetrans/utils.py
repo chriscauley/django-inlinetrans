@@ -1,13 +1,14 @@
 # coding=utf-8
-from django.conf import settings
 
-import re
+import importlib
 import os
+import re
+import subprocess
 import sys
 import tempfile
-import subprocess
-import importlib
+
 from django import VERSION as django_version
+from django.conf import settings
 
 
 
@@ -20,6 +21,7 @@ def validate_format(pofile):
     cmd = ['msgfmt', '--check-format', temp_file]
     process = subprocess.Popen(cmd, stderr=subprocess.PIPE)
     out, err = process.communicate()
+
     if process.returncode != 0:
         input_lines = open(temp_file, 'r').readlines()
         error_lines = err.strip().split('\n')
@@ -28,6 +30,7 @@ def validate_format(pofile):
 
         def format_error_line(line):
             parts = line.split(':')
+
             if len(parts) == 3:
                 line_number = int(parts[1])
                 text = input_lines[line_number - 1]
@@ -38,7 +41,10 @@ def validate_format(pofile):
         errors = [format_error_line(line) for line in error_lines]
 
     os.unlink(temp_file)
+
     return errors
+
+
 
 def get_ordered_path_list(include_djangos):
     paths = []
@@ -52,6 +58,7 @@ def get_ordered_path_list(include_djangos):
     # so if using old Django, use reversed when adding dirs
     if django_version[0] < 1 or (django_version[0] == 1 and django_version[1] < 3):  # Before django 1.3
         installed_apps = reversed(settings.INSTALLED_APPS)
+
     else:  # Django 1.3
         installed_apps = settings.INSTALLED_APPS
         
@@ -59,6 +66,7 @@ def get_ordered_path_list(include_djangos):
     for appname in installed_apps:
         appname = str(appname)  # to avoid a fail in __import__ sentence
         p = appname.rfind('.')
+
         if p >= 0:
             app = getattr(__import__(appname[:p], {}, {}, [appname[p + 1:]]), appname[p + 1:])
         else:
@@ -74,6 +82,7 @@ def get_ordered_path_list(include_djangos):
     project = __import__(parts[0], {}, {}, [])
     projectpath = os.path.join(os.path.dirname(project.__file__), 'locale')
     localepaths = [os.path.normpath(path) for path in settings.LOCALE_PATHS]
+
     if (projectpath and os.path.isdir(projectpath) and
         os.path.normpath(projectpath) not in localepaths):
         paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
@@ -85,21 +94,21 @@ def get_ordered_path_list(include_djangos):
     return paths
 
 
+
 def find_pos(lang, include_djangos=False):
-    '''
-    scans a couple possible repositories of gettext catalogs for the given
-    language code
-
-    '''
-
+    """
+    scans a couple possible repositories of gettext catalogs for the given language code
+    """
     paths = get_ordered_path_list(include_djangos)
 
     ret = []
     rx = re.compile(r'(\w+)/../\1')
     langs = (lang, )
+
     if u'-' in lang:
         _l, _c = map(lambda x: x.lower(), lang.split(u'-'))
         langs += (u'%s_%s' % (_l, _c), u'%s_%s' % (_l, _c.upper()), )
+
     elif u'_' in lang:
         _l, _c = map(lambda x: x.lower(), lang.split(u'_'))
         langs += (u'%s-%s' % (_l, _c), u'%s-%s' % (_l, _c.upper()), )
@@ -107,8 +116,9 @@ def find_pos(lang, include_djangos=False):
     for path in paths:
         for lang_ in langs:
             dirname = rx.sub(r'\1', '%s/%s/LC_MESSAGES/' % (path, lang_))
+
             for fn in ('django.po', 'djangojs.po', ):
                 if os.path.isfile(dirname + fn) and os.path.abspath((dirname + fn)) not in ret:
                     ret.append(os.path.abspath(dirname + fn))
-    return ret
 
+    return ret

@@ -19,7 +19,8 @@
     var toolbar_tpl = '\
         <div class="inlinetrans-container">\
             <span class="inlinetrans-caption">{% trans "Translator" %}</span> \
-            <span class="inlinetrans-translation">{% trans "Your are translating: ENGLISH" %} ➔ DEUTSCH</span> \
+            <span class="inlinetrans-translation">{% trans "Your are translating: ENGLISH" %} ➔ {{ language|upper }}</span> \
+            <span class="inlinetrans-progress">{% trans "Done:" %} XX%</span> \
             <span class="inlinetrans-actions">\
                 <span class="inlinetrans-action highlight-trans">{% trans "See translatable items" %}</span>\
                 <span class="inlinetrans-action highlight-notrans">{% trans "See non translated items" %}</span>\

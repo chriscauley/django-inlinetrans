@@ -17,7 +17,8 @@
     margin: 0 2em;
 }
 
-.inlinetrans-translation {
+.inlinetrans-translation,
+.inlinetrans-progress {
     margin-right: 2em;
 }
 
