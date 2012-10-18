@@ -31,10 +31,6 @@
     color: #fdfdfd;
 }
 
-.restart-server {
-    display: none;
-}
-
 .inlinetrans-highlight {
     background-color: #90ee90;
 }
@@ -42,6 +38,19 @@
 .inlinetrans-untranslated {
     background-color: #ffc0cb;
 }
+
+.inlinetrans-highlight:hover,
+.inlinetrans-untranslated:hover {
+    background-color: #fdfdfd;
+    border: 1px solid #999;
+}
+
+.restart-server {
+    display: none;
+    margin: 0.5em 1em;
+}
+
+
 
 .inlinetrans-busy {
     display: none;
