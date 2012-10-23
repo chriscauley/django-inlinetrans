@@ -27,8 +27,11 @@ class Command(makemessages.Command):
         old_inline_re = trans_real.inline_re
         old_block_re = trans_real.block_re
 
-        trans_real.inline_re = re.compile(r"""^\s*(?:trans|itrans|inline_trans)\s+((?:".*?")|(?:'.*?'))\s*""")
-        trans_real.block_re = re.compile(r"""^\s*(?:blocktrans|iblocktrans)(?:\s+|$)""")
+        trans_real.inline_re = re.compile(r"""^\s*(?:trans|itrans)\s+((?:"[^"]*?")|(?:'[^']*?'))(\s+.*context\s+(?:"[^"]*?")|(?:'[^']*?'))?\s*""")
+
+        # coming soon (hopefully)
+        #block_re = re.compile(r"""^\s*(?:blocktrans|iblocktrans)(\s+.*context\s+(?:"[^"]*?")|(?:'[^']*?'))?(?:\s+|$)""")
+        #endblock_re = re.compile(r"""^\s*(?:endblocktrans|iendblocktrans)$""")
 
         super(Command, self).handle(*args, **options)
 
