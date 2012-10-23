@@ -62,7 +62,7 @@ class InlineTranslateNode(Node):
             user = None
 
         # if the user is no translator just render the translated value
-        user_is_translator = (user.groups.filter(name=app_settings.TRANSLATORS_GROUP).count() > 0)
+        user_is_translator = user and (user.groups.filter(name=app_settings.TRANSLATORS_GROUP).count() > 0)
         if not (user and user_is_translator):
             self.filter_expression.var.translate = not self.noop
             output = self.filter_expression.resolve(context)
