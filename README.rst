@@ -85,7 +85,7 @@ Also, you can customize the toolbar and other parameters using inlinetrans as fo
 
         var toolbar_tpl = '\
             <div class="inlinetrans-container">\
-                <img class="inlinetrans-busy" src="{{ INLINETRANS_MEDIA_URL }}img/ajax-loader-transparent.gif"/>\
+                <img class="inlinetrans-busy" src="{{ INLINETRANS_STATIC_URL }}img/ajax-loader-transparent.gif"/>\
                 <span class="inlinetrans-actions">\
                     <span class="inlinetrans-action highlight-trans">See translatable items</span>\
                     <span class="inlinetrans-action highlight-notrans">See non translated items</span>\
