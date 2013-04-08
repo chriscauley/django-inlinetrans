@@ -25,6 +25,9 @@
                 <span class="inlinetrans-action highlight-trans">{% trans "See translatable items" %}</span>\
                 <span class="inlinetrans-action highlight-notrans">{% trans "See non translated items" %}</span>\
                 <span class="inlinetrans-action restart-server">{% trans "Apply changes" %}</span>\
+                <span class="inlinetrans-action backend">\
+                    <a href="{% url rosetta.views.home %}">{% trans "Translation Backend" %}</a>\
+                </span>\
             </span>\
             <img class="inlinetrans-busy" src="{{ INLINETRANS_STATIC_URL }}img/ajax-loader-transparent.gif"/>\
         </div>';
